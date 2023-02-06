@@ -1,0 +1,27 @@
+# Reads the measurements.xml every 10 seconds
+sensor:
+  - platform: rest
+    resource: http://Stegagid_IP/measurements.xml
+    json_attributes:
+      - root
+      - Measurements
+    name: solar_inverter
+    scan_interval: 10
+    value_template: 'OK'
+
+# Specify the sensors and values
+# Note XML starts from 0
+# This is valid for StecaGrid 3203x
+template:
+    sensors:
+      solar_live_output:
+        value_template: >
+            {% set root = state_attr('sensor.solar_inverter', 'root') %}
+            {% if root.Device.Measurements.Measurement[6]["@Value"] is defined %}
+                {{ root.Device.Measurements.Measurement[6]["@Value"] | round(0)}}
+            {% else %}
+                0
+            {% endif %}
+        device_class: power
+        unit_of_measurement: 'Watt'
+        friendly_name: Live power
