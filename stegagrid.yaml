@@ -28,9 +28,13 @@ template:
           {% else %}
               0
           {% endif %}
-        device_class: power
+        # 2023-02-11, ref https://community.home-assistant.io/t/energy-from-riemann-sum-integral-device-not-showing/390180/4
+        device_class: energy
         unit_of_measurement: 'W'
         state_class: measurement
+        # 2023-02-11, ref https://community.home-assistant.io/t/how-to-enable-power-consumption-statistics/327102/13
+        attributes:         
+          last_reset: '1970-01-01T00:00:00+00:00'
       - name: "Inverter temperature"
         unique_id: inverter_temperature
         state: >
